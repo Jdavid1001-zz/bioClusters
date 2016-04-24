@@ -7,7 +7,7 @@ def file2Dataframe(fileName):
     
 def order_and_index_training(df):
     df = df.sort_values(['dataset', 'trt', 'y'])
-    df = df.set_index(['dataset', 'trt'])
+    df = df.set_index(['dataset', 'trt'], drop=False)
     return df
 
 def get_dataset_list(df):
