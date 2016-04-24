@@ -16,10 +16,11 @@ def get_standard(df, dataset):
     
 def plot_hists(df1, df2, dataset, title):
     plt.figure()
-    df1['y'].plot.hist()
+    df1['y'].plot.hist().set_title(title + str(dataset))
     plt.axvline(df1['y'].mean(), color='b', linestyle='dashed', linewidth=2)
-    df2['y'].plot.hist().set_title(title + str(dataset))
-    plt.axvline(df2['y'].mean(), color='r', linestyle='dashed', linewidth=2)
+    if df2 is not None:
+        df2['y'].plot.hist()
+        plt.axvline(df2['y'].mean(), color='r', linestyle='dashed', linewidth=2)
     
 def hist_training(df_tr_in, datasets, listOfConditions):
     i = 0
@@ -29,24 +30,16 @@ def hist_training(df_tr_in, datasets, listOfConditions):
         
         plot_hists(df_nominal, df_standard, dataset, 
                    'nominal underneath; standard ontop ')
-            
-        plt.figure()
-        df_nominal['y'].plot.hist().set_title('nominal ' + str(dataset))
-        plt.axvline(df_nominal['y'].mean(), color='b', linestyle='dashed', linewidth=2)
-        if listOfConditions[i] is not None:
+        if listOfConditions[i] is None:
+            plot_hists(df_nominal, None, dataset, 'nominal ')
+        else:
             df_condition = df_tr_in.loc[listOfConditions[i][0]]
+            
             df_condition_nominal = get_nominal(df_condition, dataset)
-            df_condition_nominal['y'].plot.hist().set_title(
-                'nominal + conditional ' + str(dataset))
-            plt.axvline(df_condition_nominal['y'].mean(), color='r', linestyle='dashed', linewidth=2)
-                
-            plt.figure()
-            df_standard['y'].plot.hist()
-            plt.axvline(df_standard['y'].mean(), color='b', linestyle='dashed', linewidth=2)
+            plot_hists(df_nominal, df_condition_nominal, dataset, 'nominal + conditional ')
+            
             df_condition_standard = get_standard(df_condition, dataset)
-            df_condition_standard['y'].plot.hist().set_title(
-                'standard + conditonal ' + str(dataset))
-            plt.axvline(df_condition_standard['y'].mean(), color='r', linestyle='dashed', linewidth=2)
+            plot_hists(df_standard, df_condition_standard, dataset, 'standard + conditonal ')
         i = i + 1
 
 hist_training(df_tr_in, datasets,
