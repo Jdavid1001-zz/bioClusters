@@ -4,15 +4,14 @@ import data_paths as dp
 import matplotlib.pyplot as plt
 df_tr_in, datasets = dm.file2DFAndSets(dp.training_in_csv)
 
-def get_nominal(df, dataset):
+def partition(df, dataset, dataType="standard"):
+    trt = 0
+    if dataType is not "standard":
+        trt = 1 
     df_dataset = df.loc[df.dataset==dataset]
-    df_nominal = df_dataset.loc[df_dataset.trt==1]
-    return df_nominal
-
-def get_standard(df, dataset):
-    df_dataset = df.loc[df.dataset==dataset]
-    df_standard = df_dataset.loc[df_dataset.trt==0]
-    return df_standard
+    df_dataset = df_dataset.loc[df_dataset.trt==trt]
+    return df_dataset
+    
     
 def plot_hists(df1, df2, dataset, title):
     plt.figure()
@@ -28,8 +27,8 @@ def plot_hists(df1, df2, dataset, title):
 def hist_training(df_tr_in, datasets, listOfConditions):
     i = 0
     for dataset in datasets:
-        df_standard = get_standard(df_tr_in, dataset)
-        df_nominal = get_nominal(df_tr_in, dataset)
+        df_standard = partition(df_tr_in, dataset)
+        df_nominal = partition(df_tr_in, dataset, dataType="nominal")
         
         plot_hists(df_nominal, df_standard, dataset, 
                    'nominal underneath; standard ontop ')
@@ -40,11 +39,12 @@ def hist_training(df_tr_in, datasets, listOfConditions):
         else:
             df_condition = df_tr_in.loc[listOfConditions[i][0]]
             
-            df_condition_nominal = get_nominal(df_condition, dataset)
+            df_condition_nominal = partition(df_condition, dataset, 
+                                               dataType="nominal")
             plot_hists(df_nominal, df_condition_nominal, dataset, 
                        'nominal + conditional ')
             
-            df_condition_standard = get_standard(df_condition, dataset)
+            df_condition_standard = partition(df_condition, dataset)
             plot_hists(df_standard, df_condition_standard, dataset, 
                        'standard + conditonal ')
                        
