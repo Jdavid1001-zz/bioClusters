@@ -14,18 +14,21 @@ def get_standard(df, dataset):
     df_standard = df_dataset.loc[df_dataset.trt==0]
     return df_standard
     
+def plot_hists(df1, df2, dataset, title):
+    plt.figure()
+    df1['y'].plot.hist()
+    plt.axvline(df1['y'].mean(), color='b', linestyle='dashed', linewidth=2)
+    df2['y'].plot.hist().set_title(title + str(dataset))
+    plt.axvline(df2['y'].mean(), color='r', linestyle='dashed', linewidth=2)
+    
 def hist_training(df_tr_in, datasets, listOfConditions):
     i = 0
     for dataset in datasets:
         df_standard = get_standard(df_tr_in, dataset)
         df_nominal = get_nominal(df_tr_in, dataset)
         
-        plt.figure()
-        df_nominal['y'].plot.hist()
-        plt.axvline(df_nominal['y'].mean(), color='b', linestyle='dashed', linewidth=2)
-        df_standard['y'].plot.hist().set_title(
-            'nominal underneath; standard ontop ' + str(dataset))
-        plt.axvline(df_standard['y'].mean(), color='r', linestyle='dashed', linewidth=2)
+        plot_hists(df_nominal, df_standard, dataset, 
+                   'nominal underneath; standard ontop ')
             
         plt.figure()
         df_nominal['y'].plot.hist().set_title('nominal ' + str(dataset))
