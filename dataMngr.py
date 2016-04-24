@@ -13,3 +13,9 @@ def order_and_index_training(df):
 def get_dataset_list(df):
     datasets = df['dataset'].unique().tolist()
     return datasets
+
+def file2DFAndSets(fileName):
+    df_training_in = file2Dataframe(fileName)
+    datasets = get_dataset_list(df_training_in)
+    df_training_in = order_and_index_training(df_training_in)
+    return df_training_in, datasets
