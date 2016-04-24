@@ -27,10 +27,13 @@ def hist_training(df_tr_in, datasets, listOfConditions):
         df_nominal['y'].plot.hist().set_title('nominal ' + str(dataset))
         print i
         if listOfConditions[i] is not None:
-            df_condition = df_tr_in.loc[listOfConditions[i]]
+            df_condition = df_tr_in.loc[listOfConditions[i][0]]
             df_condition_nominal = get_nominal(df_condition, dataset)
             df_condition_nominal['y'].plot.hist().set_title(
                 'nominal + conditional ' + str(dataset))
         i = i + 1
 
-hist_training(df_tr_in, datasets, [None, df_tr_in.x29 < 51.3, None, None])
+hist_training(df_tr_in, datasets,
+                  [None, 
+                       [df_tr_in.x29 < 51.3],
+                           [df_tr_in.x5 == 1] or [df_tr_in.x5 == 1], None])
