@@ -31,7 +31,8 @@ def zScoreDiff(df1, df2, title):
     zScore1 = float(meanDiff) / std1
     zScore2 = float(meanDiff) / std2
     
-    print title + ' ' + 'Z score info:'
+    print title + ' '
+    print 'Z score info:'
     print 'df1 std: ', std1
     print 'zScoreDiff1: ', zScore1
     print 'df2 std: ', std2
@@ -56,15 +57,22 @@ def hist_training(df_tr_in, datasets, listOfConditions):
             
         else:
             df_condition = df_tr_in.loc[listOfConditions[i][0]]
+            df_not_condition = df_tr_in.loc[[not x for x in listOfConditions[i][0]]]
             
             df_condition_nominal = partition(df_condition, dataset, 
                                                dataType="nominal")
+            df_not_condition_nominal = partition(df_not_condition, dataset,
+                                                     dataType="nominal")
+                                                     
             analyzeDFs(df_nominal, df_condition_nominal, dataset, 
                        'nominal + conditional')
+            analyzeDFs(df_condition_nominal, df_not_condition_nominal,
+                       dataset, 'conditional + not conditional')
             
             df_condition_standard = partition(df_condition, dataset)
             analyzeDFs(df_standard, df_condition_standard, dataset, 
                        'standard + conditonal')
+            
                        
         i = i + 1
 
