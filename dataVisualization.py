@@ -13,9 +13,9 @@ def partition(df, dataset, dataType="standard"):
     return df_dataset
     
     
-def plot_hists(df1, df2, dataset, title):
+def plot_hists(df1, df2, title):
     plt.figure()
-    df1['y'].plot.hist().set_title(title + str(dataset))
+    df1['y'].plot.hist().set_title(title)
     plt.axvline(df1['y'].mean(), color='b', 
                 linestyle='dashed', linewidth=2)
                 
@@ -23,6 +23,23 @@ def plot_hists(df1, df2, dataset, title):
         df2['y'].plot.hist()
         plt.axvline(df2['y'].mean(), color='r', 
                     linestyle='dashed', linewidth=2)
+
+def zScoreDiff(df1, df2, title):
+    meanDiff = abs(df1['y'].mean() - df2['y'].mean())
+    std1 = df1['y'].std()
+    std2 = df2['y'].std()
+    zScore1 = float(meanDiff) / std1
+    zScore2 = float(meanDiff) / std2
+    
+    print title + ' ' + 'Z score info:'
+    print 'df1 std: ', std1
+    print 'zScoreDiff1: ', zScore1
+    print 'df2 std: ', std2
+    print 'zScoreDiff2: ', zScore2
+    
+def analyzeDFs(df1, df2, dataset, title):
+    title = title + ' ' + str(dataset)
+    plot_hists(df1, df2, title)
     
 def hist_training(df_tr_in, datasets, listOfConditions):
     i = 0
@@ -30,23 +47,23 @@ def hist_training(df_tr_in, datasets, listOfConditions):
         df_standard = partition(df_tr_in, dataset)
         df_nominal = partition(df_tr_in, dataset, dataType="nominal")
         
-        plot_hists(df_nominal, df_standard, dataset, 
-                   'nominal underneath; standard ontop ')
+        analyzeDFs(df_nominal, df_standard, dataset, 
+                   'nominal underneath; standard ontop')
 
         if listOfConditions[i] is None:
-            plot_hists(df_nominal, None, dataset, 'nominal ')
+            plot_hists(df_nominal, None, 'nominal ' + str(dataset))
             
         else:
             df_condition = df_tr_in.loc[listOfConditions[i][0]]
             
             df_condition_nominal = partition(df_condition, dataset, 
                                                dataType="nominal")
-            plot_hists(df_nominal, df_condition_nominal, dataset, 
-                       'nominal + conditional ')
+            analyzeDFs(df_nominal, df_condition_nominal, dataset, 
+                       'nominal + conditional')
             
             df_condition_standard = partition(df_condition, dataset)
-            plot_hists(df_standard, df_condition_standard, dataset, 
-                       'standard + conditonal ')
+            analyzeDFs(df_standard, df_condition_standard, dataset, 
+                       'standard + conditonal')
                        
         i = i + 1
 
