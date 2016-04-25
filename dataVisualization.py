@@ -40,6 +40,7 @@ def zScoreDiff(df1, df2, title):
 def analyzeDFs(df1, df2, dataset, title):
     title = title + ' ' + str(dataset)
     plot_hists(df1, df2, title)
+    zScoreDiff(df1, df2, title)
     
 def hist_training(df_tr_in, datasets, listOfConditions):
     i = 0
